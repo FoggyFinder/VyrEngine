@@ -1,0 +1,10 @@
+﻿<Application x:Class="VyrEditor.WPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:VyrEditor.WPF"
+             xmlns:vyr="clr-namespace:VyrViewModel;assembly=VyrViewModel"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <vyr:ViewModelLocator x:Key="VMLocator" />
+    </Application.Resources>
+</Application>
