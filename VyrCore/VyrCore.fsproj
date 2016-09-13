@@ -43,7 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Interfaces.fs" />
+    <Compile Include="FSharpTypes.fs" />
+    <Compile Include="Basic.fs" />
+    <Compile Include="LowLevelRenderer.fs" />
     <Compile Include="Logging.fs" />
   </ItemGroup>
   <PropertyGroup>

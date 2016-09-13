@@ -38,14 +38,31 @@
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Engine.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VyrCore\VyrCore.fsproj">
+      <Name>VyrCore</Name>
+      <Project>{8d71d0b9-6e81-4aa4-a92d-063b19b0cbc4}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\VyrRenderer\VyrRenderer.fsproj">
+      <Name>VyrRenderer</Name>
+      <Project>{4d53fc43-b468-4757-b80c-5299cb4e2dd2}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

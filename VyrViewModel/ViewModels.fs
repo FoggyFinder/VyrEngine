@@ -2,27 +2,31 @@
 
 open GalaSoft.MvvmLight
 open GalaSoft.MvvmLight.Ioc
-open GalaSoft.MvvmLight.Command
+open GalaSoft.MvvmLight.CommandWpf
 open Microsoft.Practices.ServiceLocation
 
 open VyrEngine
+open System
 open System.Windows.Input
 
 /// The ViewModel for the main window.
 type MainWindowVM() = 
     inherit ViewModelBase()
-    member this.InitializeEngineCommand = 
-        RelayCommand(fun () -> 
-            System.Windows.MessageBox.Show("Jay212..") |> ignore
-            System.Diagnostics.Debug.WriteLine("hmm..212")
-            Engine.initialize |> ignore) :> ICommand
+    let test() = System.Windows.MessageBox.Show("hm") |> ignore
+    /// Function to initialize the engine.
+    let initializeEngine() = 
+        System.Diagnostics.Debug.WriteLine("Initialize Engine..")
+        Engine.initialize |> ignore
+    /// Function to initialize the graphics control.
+    let initializeControl sender = 
+        System.Diagnostics.Debug.WriteLine("Initialize Surface..")
+        let controlArgs = {ControlArgs.Sender = sender}
+        Engine.initializeSurface 0 (SurfaceMode.Control controlArgs) 1 |> ignore
+    /// Initializes the engine subsystems.
+    member this.InitializeEngineCommand with get() = new RelayCommand(new System.Action(test))
+    //member this.InitializeEngineCommand = new RelayCommand(new Action(initializeEngine))
     /// Initializes the graphics context for the window. Puts the parent control as the parameter.
-    member this.InitializeGraphicsCommand : ICommand = 
-        RelayCommand<obj>(fun (sender:obj) ->
-            System.Windows.MessageBox.Show("Jay..") |> ignore
-            System.Diagnostics.Trace.WriteLine("hmm..1")
-            let controlArgs = {ControlArgs.Sender = sender}
-            (Engine.initializeSurface 0 (SurfaceMode.Control controlArgs) 0) |> ignore) :> ICommand
+    //member this.InitializeGraphicsCommand = RelayCommand<obj>(Action<obj>(initializeControl)) :> ICommand
 
 /// The ViewModelLocator is used by the Views to initialize their individual DataContext
 type ViewModelLocator() =
