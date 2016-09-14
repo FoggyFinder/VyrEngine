@@ -19,7 +19,7 @@ namespace VyrVM
         IShaderProgram shaderProgram;
 
         IVertexBuffer vb1;
-        IVertexBuffer vb2;
+        IVertexBufferIndexed vb2;
 
         int width;
         int height;
@@ -48,7 +48,7 @@ namespace VyrVM
             // create an attribute by specifying vertex component size (Vec1 = 1, Vec2 = 2, Vec3 = 3), data type, stride and byte offset
             var vertexAttribute = new VertexAttribute(3, DataType.Single, 3 * sizeof(float), 0);
             // creates vertex buffer object only with vertex data and an attribute to describe the vertex flow
-            vb1 = graphics.CreateVertexBuffer(vertices, BufferUsage.StaticDraw, vertexAttribute);
+            vb1 = graphics.CreateVertexBuffer(vertices, BufferUsage.StaticDraw, new VertexAttribute[] { vertexAttribute });
 
             float[] vertices2 =
             {
@@ -65,7 +65,7 @@ namespace VyrVM
             };
 
             // create vertex buffer object with vertex data, an attribute and indices
-            vb2 = graphics.CreateVertexBufferIndexed(vertices2, indices, BufferUsage.StaticDraw, vertexAttribute);
+            vb2 = graphics.CreateVertexBufferIndexed(vertices2, indices, BufferUsage.StaticDraw, new VertexAttribute[] { vertexAttribute });
 
             renderer.ClearColor(new Color(0.2f, 0.3f, 0.2f, 0.1f));
             renderer.Viewport(new Vec2<short>(0, 0), new Size<short>((short) Width, (short) Height));
@@ -99,7 +99,7 @@ namespace VyrVM
             renderer.UseVertexBuffer(vb1);
             renderer.DrawVertexBuffer(PrimitiveType.Triangles, 0, 3);
 
-            renderer.UseVertexBuffer(vb2);
+            renderer.UseVertexBuffer(vb2.VertexBuffer);
             renderer.DrawVertexBufferIndexed(PrimitiveType.Triangles, 6);
 
             renderer.SwapBuffers();

@@ -3,12 +3,15 @@
 open VyrCore
 open OpenTK
 open OpenTK.Graphics
+
+#if _WIN32
 open OpenTK.Graphics.OpenGL
+#endif
 
 [<AutoOpen>]
 module Basic =
     /// Converts a VyrCore.DataType to OpenTK Vertex Attribute
-    let toAttribPointer t =
+    let internal toAttribPointer t =
         match t with
         | VyrCore.DataType.Double -> VertexAttribPointerType.Double
         | VyrCore.DataType.Int -> VertexAttribPointerType.Int
@@ -17,19 +20,19 @@ module Basic =
         | _ -> failwith "Not yet implemented"
 
     /// Converts a VyrCore.Primitive to a OpenTK Primitive
-    let toPrimitiveMode t =
+    let internal toPrimitiveMode t =
         match t with
         | VyrCore.PrimitiveType.Triangles -> BeginMode.Triangles
         | _ -> failwith "Not yet implemented"
 
-    let toBufferUsage t =
+    let internal toBufferUsage t =
         match t with
         | VyrCore.BufferUsage.StaticDraw -> BufferUsageHint.StaticDraw
         | VyrCore.BufferUsage.DynamicDraw -> BufferUsageHint.DynamicDraw
         | VyrCore.BufferUsage.StreamDraw -> BufferUsageHint.StreamDraw
         | _ -> failwith "Not yet implemented"
 
-    let toShaderType t =
+    let internal toShaderType t =
         match t with
         | VyrCore.ShaderType.VertexShader -> ShaderType.VertexShader
         | VyrCore.ShaderType.PixelShader -> ShaderType.FragmentShader

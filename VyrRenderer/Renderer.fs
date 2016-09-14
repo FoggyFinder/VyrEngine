@@ -5,8 +5,10 @@
 open FSharp.NativeInterop
 open VyrCore
 open OpenTK
-open OpenTK.Graphics.OpenGL
 
+#if _WIN32
+open OpenTK.Graphics.OpenGL
+#endif
 
             
 /// Initializes a OpenGL-Renderer based on a window handle.
@@ -53,4 +55,4 @@ type GLGraphics() =
         member this.CreateShader shaderType source = Shader.createShader shaderType source
         member this.CreateShaderProgram shader = Shader.createShaderProgram shader
         member this.CreateVertexBuffer vertices bufferUsage attribute = VertexBuffer.createVertexBuffer vertices bufferUsage attribute :> IVertexBuffer 
-        member this.CreateVertexBufferIndexed vertices indices bufferUsage attribute = VertexBuffer.createVertexBufferIndexed vertices indices bufferUsage attribute :> IVertexBuffer
+        member this.CreateVertexBufferIndexed vertices indices bufferUsage attribute = VertexBuffer.createVertexBufferIndexed vertices indices bufferUsage attribute :> IVertexBufferIndexed

@@ -32,9 +32,14 @@ type VertexAttribute =
         Offset : int
     }
 
+/// A vertex buffer consists of a vertex array object and a vertex buffer object
 type IVertexBuffer =
     inherit IDisposable
-    abstract ContainsIndexBuffer : bool
+
+/// A indexed vertex buffer is a composition from a normal vertex buffer and an additional element buffer
+type IVertexBufferIndexed =
+    inherit IDisposable
+    abstract VertexBuffer : IVertexBuffer
 
 /// This renderer has basic capabilities for drawing primitives.
 type IRenderer =
@@ -69,6 +74,6 @@ type IGraphics =
     /// Creates a shader program from a sequence of shaders
     abstract CreateShaderProgram : IShader seq -> Result<IShaderProgram, string>
     /// Creates a vertex buffer from an array the buffer usage and an attribute describing parameters to draw this buffer
-    abstract CreateVertexBuffer<'T when 'T : struct and 'T :> System.ValueType and 'T : (new : unit -> 'T)> : 'T array -> BufferUsage -> VertexAttribute -> IVertexBuffer
+    abstract CreateVertexBuffer<'T when 'T : struct and 'T :> System.ValueType and 'T : (new : unit -> 'T)> : 'T array -> BufferUsage -> VertexAttribute  seq -> IVertexBuffer
     /// Creates a vertex buffer from an array, indices, the buffer usage and an attribute describing parameters to draw this buffer
-    abstract CreateVertexBufferIndexed<'T when 'T : struct and 'T :> System.ValueType and 'T : (new : unit -> 'T)> : 'T array -> uint32 array -> BufferUsage -> VertexAttribute -> IVertexBuffer
+    abstract CreateVertexBufferIndexed<'T, 'U when 'T : struct and 'T :> System.ValueType and 'T : (new : unit -> 'T) and 'U : struct and 'U :> System.ValueType and 'U : (new : unit -> 'U)> : 'T array -> 'U array -> BufferUsage -> VertexAttribute seq -> IVertexBufferIndexed

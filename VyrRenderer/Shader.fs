@@ -3,7 +3,10 @@
 open FSharp.NativeInterop
 open VyrCore
 open OpenTK
+
+#if _WIN32
 open OpenTK.Graphics.OpenGL
+#endif
 
 type GLShader =
     {

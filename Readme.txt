@@ -2,8 +2,7 @@ The VyrEngine is a Multi-Project Solution rendering realtime graphics based on O
 The Engine is structured as follows:
 Engine:
 	1. VyrCore - Core Library containing all necessary interfaces to run the vyrEngine
-	2. VyrRenderer - References OpenTk, Core Library for the renderer, #ifdef implementation of specific functions
-		2.1 VyrRenderer.Android/IOS - Links files of VyrRenderer
+	2. VyrRenderer - References OpenTk and the Core Library - is hopefully compatible to Win,Linux,Android,iOS
 Editor:
 	1. VyrVM - Core Library for all GUI-Interfaces regarding the Editor (ViewModels/MVVM Design) [generally windows class library, but implemented with #ifdef]
 		1.1 VyrVM.Android - Link to VyrVM Files in order to create the android VyrVM version
