@@ -39,6 +39,7 @@ type GLRenderer(windowHandle : nativeint) =
         member this.UseShader program = 
             let p = program :?> GLShaderProgram
             GL.UseProgram(p.Program)
+        /// Activates a vertex buffer for rendering
         member this.UseVertexBuffer vb = 
             let v = vb :?> GLVertexBuffer
             GL.BindVertexArray(v.VAO)

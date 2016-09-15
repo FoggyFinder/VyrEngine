@@ -17,6 +17,7 @@ module Basic =
         | VyrCore.DataType.Int -> VertexAttribPointerType.Int
         | VyrCore.DataType.Short -> VertexAttribPointerType.Short
         | VyrCore.DataType.Single -> VertexAttribPointerType.Float
+        | VyrCore.DataType.UnsignedInt -> VertexAttribPointerType.UnsignedInt
         | _ -> failwith "Not yet implemented"
 
     /// Converts a VyrCore.Primitive to a OpenTK Primitive
@@ -25,6 +26,7 @@ module Basic =
         | VyrCore.PrimitiveType.Triangles -> BeginMode.Triangles
         | _ -> failwith "Not yet implemented"
 
+    /// Converts VyrCore.BufferUsage to a OpenTK BufferUsageHint
     let internal toBufferUsage t =
         match t with
         | VyrCore.BufferUsage.StaticDraw -> BufferUsageHint.StaticDraw
@@ -32,6 +34,7 @@ module Basic =
         | VyrCore.BufferUsage.StreamDraw -> BufferUsageHint.StreamDraw
         | _ -> failwith "Not yet implemented"
 
+    /// Converts a VyrCore.ShaderType to a OpenTK ShaderType
     let internal toShaderType t =
         match t with
         | VyrCore.ShaderType.VertexShader -> ShaderType.VertexShader

@@ -121,7 +121,13 @@
   <data name="FragmentShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FragmentShader.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="FragmentShaderColoredUniform" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FragmentShaderColoredUniform.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="VertexShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\VertexShader.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="VertexShaderColored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VertexShaderColored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

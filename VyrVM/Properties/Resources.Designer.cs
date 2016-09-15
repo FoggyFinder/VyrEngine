@@ -77,6 +77,15 @@ namespace VyrVM.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die  ähnelt.
+        /// </summary>
+        internal static string FragmentShaderColoredUniform {
+            get {
+                return ResourceManager.GetString("FragmentShaderColoredUniform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die #version 330 core
         ///
         ///layout (location = 0) in vec3 position;
@@ -89,6 +98,26 @@ namespace VyrVM.Properties {
         internal static string VertexShader {
             get {
                 return ResourceManager.GetString("VertexShader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die #version 330 core
+        ///
+        ///layout (location = 0) in vec3 position;
+        ///layout (location = 1) in vec4 color;
+        ///
+        ///out vec4 vertexColor;
+        ///
+        ///void main()
+        ///{
+        ///	gl_Position = vec4(position, 1.0);
+        ///	vertexColor = color;
+        ///} ähnelt.
+        /// </summary>
+        internal static string VertexShaderColored {
+            get {
+                return ResourceManager.GetString("VertexShaderColored", resourceCulture);
             }
         }
     }
