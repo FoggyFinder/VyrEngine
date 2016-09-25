@@ -2,6 +2,7 @@
 
 open FSharp.NativeInterop
 open VyrCore
+open VyrCore.Graphics
 open OpenTK
 
 #if _WIN32
@@ -11,7 +12,7 @@ open OpenTK.Graphics.OpenGL
 type GLShader =
     {
         Shader : int
-        Type : VyrCore.ShaderType
+        Type : VyrCore.Graphics.ShaderType
     }
     interface IShader with
         member this.Type = this.Type

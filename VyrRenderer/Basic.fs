@@ -1,6 +1,7 @@
 ﻿namespace VyrRenderer
 
 open VyrCore
+open VyrCore.Graphics
 open OpenTK
 open OpenTK.Graphics
 
@@ -23,21 +24,21 @@ module Basic =
     /// Converts a VyrCore.Primitive to a OpenTK Primitive
     let internal toPrimitiveMode t =
         match t with
-        | VyrCore.PrimitiveType.Triangles -> BeginMode.Triangles
+        | VyrCore.Graphics.PrimitiveType.Triangles -> PrimitiveType.Triangles
         | _ -> failwith "Not yet implemented"
 
     /// Converts VyrCore.BufferUsage to a OpenTK BufferUsageHint
     let internal toBufferUsage t =
         match t with
-        | VyrCore.BufferUsage.StaticDraw -> BufferUsageHint.StaticDraw
-        | VyrCore.BufferUsage.DynamicDraw -> BufferUsageHint.DynamicDraw
-        | VyrCore.BufferUsage.StreamDraw -> BufferUsageHint.StreamDraw
+        | VyrCore.Graphics.BufferUsage.StaticDraw -> BufferUsageHint.StaticDraw
+        | VyrCore.Graphics.BufferUsage.DynamicDraw -> BufferUsageHint.DynamicDraw
+        | VyrCore.Graphics.BufferUsage.StreamDraw -> BufferUsageHint.StreamDraw
         | _ -> failwith "Not yet implemented"
 
     /// Converts a VyrCore.ShaderType to a OpenTK ShaderType
     let internal toShaderType t =
         match t with
-        | VyrCore.ShaderType.VertexShader -> ShaderType.VertexShader
-        | VyrCore.ShaderType.PixelShader -> ShaderType.FragmentShader
+        | VyrCore.Graphics.ShaderType.VertexShader -> ShaderType.VertexShader
+        | VyrCore.Graphics.ShaderType.PixelShader -> ShaderType.FragmentShader
         | _ -> failwith "Not yet implemented"
 

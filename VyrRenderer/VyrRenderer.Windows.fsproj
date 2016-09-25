@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>VyrRenderer</Name>
+    <Name>VyrRenderer.Windows</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +56,7 @@
     <Compile Include="VertexBuffer.fs" />
     <Compile Include="Renderer.fs" />
     <Content Include="packages.config" />
+    <Content Include="OpenTK.dll.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -63,7 +64,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OpenTK">
-      <HintPath>..\packages\OpenTK.1.1.2349.61993\lib\NET40\OpenTK.dll</HintPath>
+      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OpenTK.GLControl">
@@ -74,12 +75,14 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\VyrCore\VyrCore.fsproj">
       <Name>VyrCore</Name>
-      <Project>{8d71d0b9-6e81-4aa4-a92d-063b19b0cbc4}</Project>
+      <Project>{48f231b3-5a78-4d73-a614-94f539ebfbe7}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

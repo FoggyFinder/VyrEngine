@@ -4,6 +4,7 @@
 
 open FSharp.NativeInterop
 open VyrCore
+open VyrCore.Graphics
 open OpenTK
 
 #if _WIN32

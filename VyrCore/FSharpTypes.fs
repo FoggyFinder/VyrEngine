@@ -99,6 +99,7 @@ module Result =
         values 
         |> Seq.map f
         |> Seq.fold fold startState
+
     /// Result monad which makes it easier to process functions returning results
     type ResultBuilder() =
         member this.Bind(m, f) = bind m f

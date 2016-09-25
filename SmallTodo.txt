@@ -1,6 +1,3 @@
 Todo's:
-- f# power tools installieren
-- websharper installieren
-- OpenTK auswechseln durch eigene Bindung? | .net core opengl/opengl es bindung
 - VyrCore: LowLevelRenderer namespace -> VyrCore.Graphics
 - Convenient handling of shaders and shader loading [possible small shader library of often used shaders?]

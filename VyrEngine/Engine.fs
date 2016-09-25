@@ -1,6 +1,7 @@
 ﻿namespace VyrEngine
 
 open VyrCore
+open VyrCore.Graphics
 
 module Engine =
 

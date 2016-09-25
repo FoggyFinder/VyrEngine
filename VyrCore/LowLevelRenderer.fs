@@ -1,5 +1,6 @@
-﻿namespace VyrCore
+﻿namespace VyrCore.Graphics
 
+open VyrCore
 open System
 
 type PrimitiveType = 

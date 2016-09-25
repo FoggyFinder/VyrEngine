@@ -1,13 +1,6 @@
 ﻿namespace VyrCore
 
-/// TODO: Add struct attribute in later f# version
-(*type Color = 
-    {
-        R : float32
-        G : float32
-        B : float32
-        A : float32
-    }*)
+
 [<Struct>]
 type Color<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)>(r:'a, g:'a, b:'a, a:'a) =
     member this.R = r
@@ -25,6 +18,15 @@ type Vec3<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit ->
     member this.X = x
     member this.Y = y
     member this.Z = z
+
+/// TODO: Add struct attribute in later f# version
+(*type Color = 
+    {
+        R : float32
+        G : float32
+        B : float32
+        A : float32
+    }*)
 
 /// TODO: Add struct attribute in later f# version
 (*type Vec2<'a> =

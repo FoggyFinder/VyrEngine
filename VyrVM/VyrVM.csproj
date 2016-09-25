@@ -75,12 +75,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VyrCore\VyrCore.fsproj">
-      <Project>{8d71d0b9-6e81-4aa4-a92d-063b19b0cbc4}</Project>
+      <Project>{48f231b3-5a78-4d73-a614-94f539ebfbe7}</Project>
       <Name>VyrCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VyrEngine\VyrEngine.fsproj">
+    <ProjectReference Include="..\VyrEngine\VyrEngine.Windows.fsproj">
       <Project>{ef1ed472-e1bb-4abc-9274-7dc43008df58}</Project>
-      <Name>VyrEngine</Name>
+      <Name>VyrEngine.Windows</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
