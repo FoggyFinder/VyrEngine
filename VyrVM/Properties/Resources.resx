@@ -118,16 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="BrickGroutless0095_2_XL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BrickGroutless0095_2_XL.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="FragmentShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FragmentShader.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="FragmentShaderColoredUniform" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FragmentShaderColoredUniform.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="FragmentShaderTex" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FragmentShaderTex.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="Moss0177_1_XL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Moss0177_1_XL.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="VertexShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\VertexShader.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="VertexShaderColored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\VertexShaderColored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="VertexShaderTex" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VertexShaderTex.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

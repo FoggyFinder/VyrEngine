@@ -58,8 +58,9 @@ type DataType =
     | UnsignedInt = 4
 
 [<AutoOpen>]
-module Basic =
-    let dataType<'a> = 
+module TypeOperations =
+    /// Returns the data type for a generic type. This function works only on primitive types like int short etc.
+    let dataType<'a> =
         match typeof<'a> with
         | x when x = typeof<int> -> Just DataType.Int
         | x when x = typeof<int16> -> Just DataType.Short
@@ -67,3 +68,5 @@ module Basic =
         | x when x = typeof<float> -> Just DataType.Double
         | x when x = typeof<single> -> Just DataType.Single
         | _ -> Nothing
+    /// Returns a color struct as array
+    let toColorArray (c:Color<'a>) = [|c.R; c.G; c.B; c.A|]

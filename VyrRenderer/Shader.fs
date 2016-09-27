@@ -68,7 +68,7 @@ module Shader =
         shaders |> Seq.map (fun s -> s :?> GLShader) |> Seq.iter (fun s -> GL.AttachShader(program, s.Shader))
         GL.LinkProgram(program)
         let result = ref -1
-        GL.GetProgram(program, ProgramParameter.LinkStatus, result)
+        GL.GetProgram(program, GetProgramParameterName.LinkStatus, result)
         if result.Value = 1 then Result<IShaderProgram, string>.Success {Program = program}
         else 
             let log = GL.GetProgramInfoLog(program)

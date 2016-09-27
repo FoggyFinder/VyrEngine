@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="FSharpTypes.fs" />
+    <Compile Include="Math.fs" />
     <Compile Include="Basic.fs" />
     <Compile Include="LowLevelRenderer.fs" />
     <Compile Include="Logging.fs" />

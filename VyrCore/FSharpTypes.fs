@@ -51,14 +51,14 @@ type Finalizer<'a when 'a :> System.IDisposable> =
 [<AutoOpen>]
 module FSharp =
     /// Checks if an optional value is some and returns true else false
-    let isSome optional = 
+    let inline isSome optional = 
         match optional with
         | Just _ ->  true
         | _ -> false
 
 [<AutoOpen>]
 module Maybe =
-    let internal bindOptional m f =
+    let inline private bindOptional m f =
         match m with
         | Just a -> f a
         | _ -> Nothing
@@ -71,12 +71,12 @@ module Maybe =
 
 [<AutoOpen>]
 module Result =
-    let internal bind (m:Result<'a, 'b>) (f:'a -> Result<'c,'b>) =
+    let inline private bind (m:Result<'a, 'b>) (f:'a -> Result<'c,'b>) =
         match m with
         | Result.Success a -> f a
         | Result.Error b -> Error b
     /// The folder uses a current state and accumulates each new result. 
-    let internal fold (s:Result<'a seq, 'b>) r = 
+    let private fold (s:Result<'a seq, 'b>) r = 
         match r with  // match the current result
         | Success succ ->
             match s with // match the accumulated results
@@ -94,12 +94,11 @@ module Result =
                 Error err
             | _ -> Error err
     /// Accumulates all values by function f and returns one result value containing the success sequence or an error
-    let internal forValues values (f:'t -> Result<'a, 'b>) =
+    let private forValues values (f:'t -> Result<'a, 'b>) =
         let startState = Result<'a seq, 'b>.Success Seq.empty
         values 
         |> Seq.map f
         |> Seq.fold fold startState
-
     /// Result monad which makes it easier to process functions returning results
     type ResultBuilder() =
         member this.Bind(m, f) = bind m f
@@ -107,5 +106,4 @@ module Result =
         member this.Yield(x) = Result<'a, 'b>.Success x
         member this.Return(x) = Result<'a,'b>.Success x
         member this.For(values, f) = forValues values f
-
     let result = new ResultBuilder()

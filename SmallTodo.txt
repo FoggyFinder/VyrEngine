@@ -1,3 +1,7 @@
 Todo's:
-- VyrCore: LowLevelRenderer namespace -> VyrCore.Graphics
+- Texturing
+- Transparency
+- Camera
+- Lights
+- Deferred Renderer
 - Convenient handling of shaders and shader loading [possible small shader library of often used shaders?]

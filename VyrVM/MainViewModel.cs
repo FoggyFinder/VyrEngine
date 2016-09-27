@@ -18,10 +18,20 @@ namespace VyrVM
         IGraphics graphics;
         IRenderer renderer;
 
+        // Normal Shader
         IShaderProgram shaderProgram;
+
+        // Colored Shader
         IShaderProgram shaderProgramColored;
         IShaderUniform<float> multiplicator;
         float uniformValue;
+
+        // Textured Shader
+        IShaderProgram shaderProgramTextured;
+        ITexture2D brickTexture;
+        ITexture2D mossTexture;
+        IShaderUniform<int> sampler1;
+        IShaderUniform<int> sampler2;
 
         IVertexBuffer vb1;
         IVertexBufferIndexed vb2;
@@ -55,7 +65,7 @@ namespace VyrVM
         {
             // Either create the attribute manually or use the built-in function
             //var vertexAttribute = new VertexAttribute(3, DataType.Single, 3 * sizeof(float), 0);
-            var vertexAttribute = RendererHelper.attributeVertexPosition<float>();
+            var vertexAttribute = RendererHelper.attributeVertexPositionTexture<float, float>();
 
             /// When you have only positions you can either use the pos array directly or use the vertices array
             Vec3<float>[] pos =
@@ -66,12 +76,20 @@ namespace VyrVM
                 new Vec3<float>(0.0f, 0.5f, 0.0f)
             };
 
-            VertexPosition<float>[] vertices =
+            Vec2<float>[] tex =
             {
-                new VertexPosition<float>(pos[0]),
-                new VertexPosition<float>(pos[1]),
-                new VertexPosition<float>(pos[2]),
-                new VertexPosition<float>(pos[3])
+                new Vec2<float>(0.0f, 1.0f),
+                new Vec2<float>(1.0f, 1.0f),
+                new Vec2<float>(1.0f, 0.0f),
+                new Vec2<float>(0.0f, 0.0f)
+            };
+
+            VertexPosTex<float, float>[] vertices =
+            {
+                new VertexPosTex<float, float>(pos[0], tex[0]),
+                new VertexPosTex<float, float>(pos[1], tex[1]),
+                new VertexPosTex<float, float>(pos[2], tex[2]),
+                new VertexPosTex<float, float>(pos[3], tex[3])
             };
 
             uint[] indices =
@@ -111,6 +129,7 @@ namespace VyrVM
             // initialize graphics and a renderer using a window handle
             graphics = Engine.initializeGraphics(RenderingAPI.OpenGL);
             renderer = graphics.CreateRenderer(handle);
+            renderer.UseSRGBFramebuffer();
 
             // Create shader program by using shader sources
             ShaderSource[] sources =
@@ -126,6 +145,23 @@ namespace VyrVM
             {
                 shaderProgramColored = graphics.CreateShaderProgram(new IShader[] { vertexShader, pixelShader }).Value;
             }
+
+            // create textured shader
+            ShaderSource[] sourcesTexture =
+            {
+                new ShaderSource(ShaderType.VertexShader, Properties.Resources.VertexShaderTex),
+                new ShaderSource(ShaderType.PixelShader, Properties.Resources.FragmentShaderTex)
+            };
+            shaderProgramTextured = RendererHelper.createShaderProgram(graphics, sourcesTexture).Value;
+
+            // Diffuse textures mostly srgb, normals mostly normal rgb
+            // create texture
+            var settings = new TextureSettings2D(TextureTargetFormat.SRGB8, TextureOriginalFormat.BGR, TextureWrapMode.MirroredRepeat,
+                TextureWrapMode.MirroredRepeat, TextureMinifyingFilter.Linear, TextureMagnifyingFilter.Linear, Maybe<Color<float>>.Nothing);
+            brickTexture = graphics.CreateTexture2D(settings, @"Resources\BrickGroutless0095_2_XL.jpg").Value;
+            mossTexture = graphics.CreateTexture2D(settings, @"Resources\Moss0177_1_XL.jpg").Value;
+            sampler1 = shaderProgramTextured.GetUniform<int>("tex");
+            sampler2 = shaderProgramTextured.GetUniform<int>("tex2");
 
             // use uniform values for shaders
             multiplicator = shaderProgramColored.GetUniform<float>("multiplicator");
@@ -144,9 +180,17 @@ namespace VyrVM
 
         void Closing()
         {
+            brickTexture.Dispose();
+            mossTexture.Dispose();
+
+            shaderProgramTextured.Dispose();
+            shaderProgramColored.Dispose();
             shaderProgram.Dispose();
+
             vb1.Dispose();
             vb2.Dispose();
+            vb3.Dispose();
+
             renderer.Dispose();
         }
 
@@ -156,20 +200,27 @@ namespace VyrVM
             renderer.Begin();
             renderer.Clear();
 
+            // render normal triangle
             renderer.UseShader(shaderProgram);
-
             renderer.UseVertexBuffer(vb1);
             renderer.DrawVertexBuffer(PrimitiveType.Triangles, 0, 3);
 
+            // render textured triangle
+            renderer.UseShader(shaderProgramTextured);
             renderer.UseVertexBuffer(vb2.VertexBuffer);
+            //renderer.UseTexture(brickTexture); // Either use only one texture
+            renderer.UseTextures(new ITexture2D[] { brickTexture, mossTexture }); // or multiple textures
+            shaderProgramTextured.SetUniform(sampler1, 0); // the order of the textures is determined by setting the uniform to the right index of the texture
+            shaderProgramTextured.SetUniform(sampler2, 1);
             renderer.DrawVertexBufferIndexed(PrimitiveType.Triangles, 6);
 
+            // animate color
             uniformValue = uniformValue + 0.01f;
             uniformValue = uniformValue > 1.0f ? 1.0f : uniformValue;
             shaderProgramColored.SetUniform(multiplicator, uniformValue);
 
+            // render colored triangle
             renderer.UseShader(shaderProgramColored);
-
             renderer.UseVertexBuffer(vb3.VertexBuffer);
             renderer.DrawVertexBufferIndexed(PrimitiveType.Triangles, 3);
 

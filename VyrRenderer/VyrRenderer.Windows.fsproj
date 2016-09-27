@@ -54,7 +54,9 @@
     <Compile Include="Basic.fs" />
     <Compile Include="Shader.fs" />
     <Compile Include="VertexBuffer.fs" />
+    <Compile Include="Texture.fs" />
     <Compile Include="Renderer.fs" />
+    <None Include="RendererTest.fsx" />
     <Content Include="packages.config" />
     <Content Include="OpenTK.dll.config" />
   </ItemGroup>
@@ -76,8 +78,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\VyrCore\VyrCore.fsproj">
       <Name>VyrCore</Name>
       <Project>{48f231b3-5a78-4d73-a614-94f539ebfbe7}</Project>

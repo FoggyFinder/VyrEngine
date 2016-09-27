@@ -3,13 +3,14 @@
 open VyrCore
 open System
 
-type PrimitiveType = 
-    | Triangles = 0
+(***************** Shader Types *******************)
 
+/// Describes the shader type used for a shader.
 type ShaderType = 
     | VertexShader = 0
     | PixelShader = 1
 
+/// Describes the shader source and type.
 type ShaderSource =
     {
         Type : ShaderType
@@ -34,6 +35,35 @@ type IShaderProgram =
     /// Sets the value for a uniform object.
     abstract SetUniform<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)> : IShaderUniform<'a>-> 'a -> unit
 
+(***************** Vertex Types *******************)
+
+/// The primitive type to be drawn for vertices of a vertex buffer.
+type PrimitiveType = 
+    | Triangles = 0
+
+/// Describes a vertex only by position.
+[<Struct>]
+type VertexPosition<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)>(pos:Vec3<'a>) =
+    member this.Position = pos
+
+/// Describes a vertex by position and vertex color.
+[<Struct>]
+type VertexPositionColor<'a, 'b when 
+    'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a) and 
+    'b : struct and 'b :> System.ValueType and 'b : (new : unit -> 'b)>(pos:Vec3<'a>, color:Color<'b>) =
+    member this.Position = pos
+    member this.Color = color
+
+/// Describes a vertex by position and texture coordinates.
+[<Struct>]
+type VertexPosTex<'a, 'b when
+    'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a) and 
+    'b : struct and 'b :> System.ValueType and 'b : (new : unit -> 'b)>(pos:Vec3<'a>, tex:Vec2<'b>) =
+    member this.Position = pos
+    member this.Texture = tex
+
+(***************** Vertex Buffer Types *******************)
+
 /// Describes the usage for the vertex buffer
 type BufferUsage =
     | StaticDraw = 0
@@ -53,17 +83,6 @@ type VertexAttribute =
         Offset : int
     }
 
-[<Struct>]
-type VertexPosition<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)>(pos:Vec3<'a>) =
-    member this.Position = pos
-
-[<Struct>]
-type VertexPositionColor<'a, 'b when 
-    'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a) and 
-    'b : struct and 'b :> System.ValueType and 'b : (new : unit -> 'b)>(pos:Vec3<'a>, color:Color<'b>) =
-    member this.Position = pos
-    member this.Color = color
-
 /// A vertex buffer consists of a vertex array object and a vertex buffer object
 type IVertexBuffer =
     inherit IDisposable
@@ -72,6 +91,76 @@ type IVertexBuffer =
 type IVertexBufferIndexed =
     inherit IDisposable
     abstract VertexBuffer : IVertexBuffer
+
+(***************** Texture Types *******************)
+
+/// Wrapping modes are used for coordinates below 0 and greater 1.
+type TextureWrapMode =
+    | Repeat = 0
+    | MirroredRepeat = 1
+    | ClampEdge = 2
+    | ClampBorder = 3
+
+/// This Filter mode is used when a texture is downscaled. Care MIP filter don't work when the bound texture is NPOT.
+type TextureMinifyingFilter =
+    | Nearest = 0
+    | Linear = 1
+
+/// This Filter mode is used when a texture is upscaled
+type TextureMagnifyingFilter = 
+    | Nearest = 0
+    | Linear = 1
+
+/// The target format for the texture. For diffuse textures mostly SRGB/SRGBA and other texture maps RGB/RGBA
+type TextureTargetFormat =
+    | RGBA8 = 0
+    | RGB8 = 1
+    | R8 = 2
+    | Depth = 3
+    | DepthStencil = 4
+    | SRGBA8 = 5
+    | SRGB8 = 6
+
+/// The original format of the texture.
+type TextureOriginalFormat =
+    | RGB = 0
+    | RGBA = 1
+    | R = 2
+    | Depth = 3
+    | DepthStencil = 4
+    | BGR = 5
+    | BGRA = 6
+
+/// Describes the wrapping mode for each axis.
+type TextureSettings2D =
+    {
+        /// Defines the target format used by the graphics api
+        TargetFormat : TextureTargetFormat
+        /// Defines the format which was originally used for the texture data
+        OriginalFormat : TextureOriginalFormat
+        /// Defines the wrap mode for the s axis
+        WrapMode_S : TextureWrapMode
+        /// Defines the wrap mode for the t axis
+        WrapMode_T : TextureWrapMode
+        /// Defines the filter applied when a texture is downscaled
+        MinifyingFilter : TextureMinifyingFilter
+        /// Defines the filter applied when a texture is upscaled
+        MagnifyingFilter : TextureMagnifyingFilter
+        /// Defines a color for the border when border wrapping mode is used
+        BorderColor : Maybe<Color<float32>>
+    }
+
+/// Defines a basic texture with texture settings.
+type ITexture2D = 
+    inherit IDisposable
+    /// Returns the texture settings used for the texture
+    abstract TextureSettings : TextureSettings2D
+    /// Returns the width of the texture
+    abstract Width : uint16
+    /// Returns the height of the texture
+    abstract Height : uint16
+
+(***************** Renderer Types *******************)
 
 /// This renderer has basic capabilities for drawing primitives.
 type IRenderer =
@@ -88,8 +177,14 @@ type IRenderer =
     abstract DrawVertexBufferIndexed : PrimitiveType -> int -> unit
     /// Stop all functionalities
     abstract End : unit -> unit
+    /// Sets the renderer to use srgb framebuffer.
+    abstract UseSRGBFramebuffer : unit -> unit
     /// Sets the shader program active for rendering
     abstract UseShader : IShaderProgram -> unit
+    /// Sets the texture active for rendering
+    abstract UseTexture : ITexture2D -> unit
+    /// Sets multiple textures active for rendering
+    abstract UseTextures : ITexture2D seq -> unit
     /// Sets the vertex buffer active for rendering
     abstract UseVertexBuffer : IVertexBuffer -> unit
     /// Swap the buffer and present it to the screen
@@ -105,6 +200,8 @@ type IGraphics =
     abstract CreateShader : ShaderType -> string -> Result<IShader, string>
     /// Creates a shader program from a sequence of shaders
     abstract CreateShaderProgram : IShader seq -> Result<IShaderProgram, string>
+    /// Creates a texture from texture settings and a string containing the file path
+    abstract CreateTexture2D : TextureSettings2D -> string -> Result<ITexture2D, string>
     /// Creates a vertex buffer from an array the buffer usage and an attribute describing parameters to draw this buffer
     abstract CreateVertexBuffer<'T when 'T : struct and 'T :> System.ValueType and 'T : (new : unit -> 'T)> : 'T array -> BufferUsage -> VertexAttribute  seq -> IVertexBuffer
     /// Creates a vertex buffer from an array, indices, the buffer usage and an attribute describing parameters to draw this buffer
@@ -121,7 +218,6 @@ module RendererHelper =
             let attribute = {Components = 3; DataType = data; Stride = stride;  Offset = 0}
             return [|attribute|]
         }
-
     /// Creates a vertex attribute for the type VertexPositionColor
     let attributeVertexPositionColor<'a, 'b> =
         maybe{
@@ -134,7 +230,18 @@ module RendererHelper =
             let colorAttribute = {Components = colorComponents; DataType = colorData; Stride = stride; Offset = offset }
             return [|positionAttribute; colorAttribute|]
         }
-
+    /// Creates a vertex attribute for the type VertexPosTex
+    let attributeVertexPositionTexture<'a, 'b> =
+        maybe{
+            let! positionData = dataType<'a>
+            let! texData = dataType<'b>
+            let positionComponents, texComponents = 3, 2
+            let stride = positionComponents * sizeof<'a> + texComponents * sizeof<'b>
+            let offset = positionComponents * sizeof<'a>
+            let positionAttribute = {Components = positionComponents; DataType = positionData; Stride = stride;  Offset = 0}
+            let colorAttribute = {Components = texComponents; DataType = texData; Stride = stride; Offset = offset }
+            return [|positionAttribute; colorAttribute|]
+        }
     /// Creates a shader program from a list of shader sources
     let createShaderProgram (graphics:IGraphics) (shaderSources:ShaderSource seq) =
         result {
