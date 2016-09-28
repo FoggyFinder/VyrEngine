@@ -47,6 +47,7 @@
     <Compile Include="LowLevelRenderer.fs" />
     <Compile Include="Logging.fs" />
     <Content Include="packages.config" />
+    <None Include="TextMath.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
