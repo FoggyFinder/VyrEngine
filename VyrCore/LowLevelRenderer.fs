@@ -29,11 +29,11 @@ type IShaderUniform<'a> = interface end
 type IShaderProgram = 
     inherit IDisposable
     /// Returns a uniform object which can be used for specifying shader data; this uniform is bound to a specific type.
-    abstract GetUniform<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)> : string -> IShaderUniform<'a>
+    abstract GetUniform<'a> : string -> IShaderUniform<'a>
     /// Returns a value which represents a uniform object
-    abstract GetUniformValue<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)> : IShaderUniform<'a> -> Maybe<'a>
+    abstract GetUniformValue<'a> : IShaderUniform<'a> -> Maybe<'a>
     /// Sets the value for a uniform object.
-    abstract SetUniform<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)> : IShaderUniform<'a>-> 'a -> unit
+    abstract SetUniform<'a> : IShaderUniform<'a>-> 'a -> unit
 
 (***************** Vertex Types *******************)
 
@@ -43,22 +43,18 @@ type PrimitiveType =
 
 /// Describes a vertex only by position.
 [<Struct>]
-type VertexPosition<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)>(pos:Vec3<'a>) =
+type VertexPosition<'a>(pos:Vec3<'a>) =
     member this.Position = pos
 
 /// Describes a vertex by position and vertex color.
 [<Struct>]
-type VertexPositionColor<'a, 'b when 
-    'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a) and 
-    'b : struct and 'b :> System.ValueType and 'b : (new : unit -> 'b)>(pos:Vec3<'a>, color:Color<'b>) =
+type VertexPositionColor<'a, 'b>(pos:Vec3<'a>, color:Color<'b>) =
     member this.Position = pos
     member this.Color = color
 
 /// Describes a vertex by position and texture coordinates.
 [<Struct>]
-type VertexPosTex<'a, 'b when
-    'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a) and 
-    'b : struct and 'b :> System.ValueType and 'b : (new : unit -> 'b)>(pos:Vec3<'a>, tex:Vec2<'b>) =
+type VertexPosTex<'a, 'b>(pos:Vec3<'a>, tex:Vec2<'b>) =
     member this.Position = pos
     member this.Texture = tex
 

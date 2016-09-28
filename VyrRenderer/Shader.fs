@@ -30,7 +30,7 @@ type GLShaderProgram =
     }
     interface IShaderProgram with
         member this.Dispose() = GL.DeleteProgram(this.Program)
-        member this.GetUniform<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)>(s) = 
+        member this.GetUniform<'a>(s) = 
             let location = GL.GetUniformLocation(this.Program, s)
             {GLShaderUniform.Location = location} :> IShaderUniform<'a>
         member this.GetUniformValue(u:IShaderUniform<'a>) = 

@@ -1,49 +1,55 @@
 ﻿namespace VyrCore
 
+/// TODO: Add struct attribute in later f# version
 
+/// Module providing functions for handling the generic types
+[<AutoOpen>]
+module internal GenericType =
+    let inline zeroOf (a:'a) = LanguagePrimitives.GenericZero<'a>
+    let inline oneOf (a:'a) = LanguagePrimitives.GenericOne<'a>
+    let inline negativeOneOf (a:'a) = zeroOf a - oneOf a
+    let inline genericTwo() = LanguagePrimitives.GenericOne + LanguagePrimitives.GenericOne
+
+/// Basic color type with rgba values
 [<Struct>]
-type Color<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)>(r:'a, g:'a, b:'a, a:'a) =
+type Color<'a>(r:'a, g:'a, b:'a, a:'a) =
     member this.R = r
     member this.G = g
     member this.B = b
     member this.A = a
 
+/// Basic vector 2 type with typical operators.
 [<Struct>]
-type Vec2<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)>(x:'a, y:'a) =
+type Vec2<'a>(x:'a, y:'a) =
     member this.X = x
     member this.Y = y
+    static member inline (*) (a, v:Vec2<_>) = Vec2<_>(a * v.X, a * v.Y)
+    static member inline (*) (v:Vec2<_>, a) = Vec2<_>(a * v.X, a * v.Y)
+    static member inline (+) (v1:Vec2<_>, v2:Vec2<_>) = Vec2<_>(v1.X + v2.X, v1.Y + v2.Y)
+    static member inline (-) (v1:Vec2<_>, v2:Vec2<_>) = Vec2<_>(v1.X - v2.X, v1.Y - v2.Y)
+    static member inline (~-) (v:Vec2<_>) = let negOne = negativeOneOf v.X in Vec2<_>(negOne * v.X, negOne * v.Y) 
 
+/// Basic vector 3 type with typical operators.
 [<Struct>]
-type Vec3<'a when 'a : struct and 'a :> System.ValueType and 'a : (new : unit -> 'a)>(x:'a, y:'a, z:'a) =
+type Vec3<'a>(x:'a, y:'a, z:'a) =
     member this.X = x
     member this.Y = y
     member this.Z = z
+    static member inline (*) (a, v:Vec3<_>) = Vec3<_>(a * v.X, a * v.Y, a * v.Z)
+    static member inline (*) (v:Vec3<_>, a) = Vec3<_>(a * v.X, a * v.Y, a * v.Z)
+    static member inline (+) (v1:Vec3<_>, v2:Vec3<_>) = Vec3<_>(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z)
 
-/// TODO: Add struct attribute in later f# version
-(*type Color = 
-    {
-        R : float32
-        G : float32
-        B : float32
-        A : float32
-    }*)
+/// Basic vector 4 type with typical operators.
+[<Struct>]
+type Vec4<'a>(x:'a,y:'a,z:'a,w:'a) =
+    member this.X = x
+    member this.Y = y
+    member this.Z = z
+    member this.W = w
+    static member inline (*) (a, v:Vec4<_>) = Vec4<_>(a * v.X, a * v.Y, a * v.Z, a * v.W)
+    static member inline (*) (v:Vec4<_>, a) = Vec4<_>(a * v.X, a * v.Y, a * v.Z, a * v.W)
+    static member inline (+) (v1:Vec4<_>, v2:Vec4<_>) = Vec4<_>(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z, v1.W + v2.W)
 
-/// TODO: Add struct attribute in later f# version
-(*type Vec2<'a> =
-    {
-        X : 'a
-        Y : 'a
-    }
-
-/// TODO: Add struct attribute in later f# version
-type Vec3<'a> =
-    {
-        X : 'a
-        Y : 'a
-        Z : 'a
-    }*)
-
-/// TODO: Add struct attribute in later f# version
 type Size<'a> =
     {
         Width : 'a
