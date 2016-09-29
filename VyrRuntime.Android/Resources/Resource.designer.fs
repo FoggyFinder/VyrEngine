@@ -21,10 +21,10 @@ namespace VyrRuntime.Android
     #nowarn "51" // address-of operator can occur in the code
     #nowarn "1183" // unused 'this' reference
     
-    exception ReturnExceptionc5e922177f954b2c86c016bc771feedf of obj
-    exception ReturnNoneExceptionc5e922177f954b2c86c016bc771feedf
+    exception ReturnException081efd3fa26f4a25af801e9283bff998 of obj
+    exception ReturnNoneException081efd3fa26f4a25af801e9283bff998
     [<AutoOpen>]
-    module FuncConvertFinalOverloadc5e922177f954b2c86c016bc771feedf =
+    module FuncConvertFinalOverload081efd3fa26f4a25af801e9283bff998 =
       // This extension member adds to the FuncConvert type and is the last resort member in the method overloading rules. 
       type global.Microsoft.FSharp.Core.FuncConvert with
           /// A utility function to convert function values from tupled to curried form
