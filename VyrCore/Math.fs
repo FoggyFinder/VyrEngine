@@ -1,6 +1,7 @@
 ﻿namespace VyrCore
 
 /// Math module for plain numbers
+[<RequireQualifiedAccess>]
 module Math =
     /// Returns true when 2 numbers are nearly equal.
     let inline approximately epsilon x y  = abs (x - y) < epsilon
@@ -8,7 +9,8 @@ module Math =
     let inline isPowerOf2 x = (x &&& (x - LanguagePrimitives.GenericOne)) = LanguagePrimitives.GenericZero
 
 /// Math module for Vector2 types
-module Vector2 =
+[<RequireQualifiedAccess>]
+module Vec2 =
     /// Calculates the squared length of a vector
     let inline squaredMagnitude (v:Vec2<_>) = let genTwo = genericTwo() in (v.X ** genTwo) + (v.Y ** genTwo)
     /// Calculates the length of a vector
@@ -29,7 +31,8 @@ module Vector2 =
     let inline isSameSided (v1:Vec2<_>) (v2:Vec2<_>) = ((dot v1 v2) |> sign) > LanguagePrimitives.GenericZero
 
 /// Math module for Vector3 types
-module Vector3 =
+[<RequireQualifiedAccess>]
+module Vec3 =
     /// Calculates the squared length of a Vec2
     let inline squaredMagnitude (v:Vec3<_>) = let genTwo = genericTwo() in (v.X ** genTwo) + (v.Y ** genTwo) + (v.Z ** genTwo)
     /// Calculates the length of a Vec2
@@ -48,16 +51,57 @@ module Vector3 =
     let inline isSameSided (v1:Vec3<_>) (v2:Vec3<_>) = ((dot v1 v2) |> sign) > LanguagePrimitives.GenericZero
 
 /// Math module for Vector4 types
-module Vector4 =
+[<RequireQualifiedAccess>]
+module Vec4 =
      /// Calculates the squared length of a Vec2
     let inline squaredMagnitude (v:Vec4<_>) = let genTwo = genericTwo() in (v.X ** genTwo) + (v.Y ** genTwo) + (v.Z ** genTwo) + (v.W ** genTwo)
     /// Calculates the length of a Vec2
     let inline magnitude (v:Vec4<_>) = v |> squaredMagnitude |> sqrt
     /// Normalizes a vector by dividing by its magnitude
     let inline normalize (v:Vec4<'a>) : Vec4<'a> = v / (magnitude v)
+    /// Returns a sequence containing the values of the vector in order X,Y,Z,W
+    let inline toSeq (v:Vec4<_>) = seq { yield v.X; yield v.Y; yield v.Z; yield v.W }
 
+/// Math module for matrix types in row major order
+[<RequireQualifiedAccess>]
 module Matrix =
-    let init row col f = ()
+    /// Calculates the index from row and column
+    let inline internal index row col colCount = row * colCount + col
+    /// Calculates the row from index and column count
+    let inline internal row index colCount = index / colCount
+    /// Calculates the column from index and column count
+    let inline internal col index colCount = index % colCount
+    /// Initializes a matrix array by providing the rows columns and a function
+    let inline internal initData rows columns  f = 
+        let inline initFunc i = f (row i columns) (col i columns)
+        Array.init (rows * columns) initFunc
+    /// Initializes a matrix array by providing rows columns and a function processing the diagonal indices.
+    let inline internal initDiagonalData rows columns f =
+        let inline initFunc row column = if row = column then f row else LanguagePrimitives.GenericZero
+        initData rows columns initFunc
+    /// Calls the constructor of the Matrix class
+    let inline internal create rows columns data = Matrix(data, rows, columns)
+    /// Creates a new matrix from a number of columns and rows and a function. The function takes the row and column as index.
+    let inline init rows columns f = initData rows columns f |> create rows columns
+    /// Creates a new matrix from a number of columns and rows and a function. The function iterates the values along the diagonal. For a 3x3 matrix the diagonal indices are 0, 1, 2.
+    let inline initDiagonal rows columns f = initDiagonalData rows columns f |> create rows columns
+    /// Creates a symmetric identity matrix from a number rows/columns
+    let inline identity n =
+        let inline initFunc (row:int) (col:int) = if row = col then LanguagePrimitives.GenericOne else LanguagePrimitives.GenericZero
+        init n n initFunc
+
+[<RequireQualifiedAccess>]
+module Matrix4 =
+    /// Calls the constructor for a 4x4 matrix (array of length 16)
+    let inline create data = Matrix4(data)
+    /// Creates a 4x4 matrix and initializes it by using a function taking the row and column.
+    let inline init f = Matrix.initData 4 4 f |> create 
+    /// Creates a 4x4 matrix and initializes it by using a function taking the indices of the diagonal
+    let inline initDiagonal f = Matrix.initDiagonalData 4 4 f |> create
+    /// Returns the 4x4 identity
+    let inline identity() = let m = Matrix.identity 4 in create m.Data
+    /// Multiplies 2 Matrix4 types
+    let inline mult m1 m2 = m1 .* m2
 
 //module Trigonometry =
     /// Checks if two vectors can form a triangle with a 

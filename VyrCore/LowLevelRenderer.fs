@@ -206,7 +206,7 @@ type IGraphics =
 [<AutoOpen>]
 module RendererHelper =
     /// Creates a vertex attribute for the type VertexPosition
-    let attributeVertexPosition<'a> =
+    let inline attributeVertexPosition<'a> =
         maybe{
             let! data = dataType<'a>
             let components = 3
@@ -215,7 +215,7 @@ module RendererHelper =
             return [|attribute|]
         }
     /// Creates a vertex attribute for the type VertexPositionColor
-    let attributeVertexPositionColor<'a, 'b> =
+    let inline attributeVertexPositionColor<'a, 'b> =
         maybe{
             let! positionData = dataType<'a>
             let! colorData = dataType<'b>
@@ -227,7 +227,7 @@ module RendererHelper =
             return [|positionAttribute; colorAttribute|]
         }
     /// Creates a vertex attribute for the type VertexPosTex
-    let attributeVertexPositionTexture<'a, 'b> =
+    let inline attributeVertexPositionTexture<'a, 'b> =
         maybe{
             let! positionData = dataType<'a>
             let! texData = dataType<'b>
@@ -239,7 +239,7 @@ module RendererHelper =
             return [|positionAttribute; colorAttribute|]
         }
     /// Creates a shader program from a list of shader sources
-    let createShaderProgram (graphics:IGraphics) (shaderSources:ShaderSource seq) =
+    let inline createShaderProgram (graphics:IGraphics) (shaderSources:ShaderSource seq) =
         result {
             //let! s = result {for s in shaderSources do let! shader = (graphics.CreateShader s.Type s.Source) in yield shader} // create IShader from sources [the for loop makes sure to dispose everything when the loop fails(error result)
             let! s = result {for s in shaderSources do yield! (graphics.CreateShader s.Type s.Source)}

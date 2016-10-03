@@ -53,6 +53,70 @@ type Vec4<'a>(x:'a,y:'a,z:'a,w:'a) =
     static member inline (*) (v:Vec4<_>, a) = Vec4<_>(a * v.X, a * v.Y, a * v.Z, a * v.W)
     static member inline (+) (v1:Vec4<_>, v2:Vec4<_>) = Vec4<_>(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z, v1.W + v2.W)
 
+/// Interface for each matrix using the matrix math module.
+type IMatrix<'a> =
+    abstract Data : 'a array
+    abstract ColumnCount : int
+    abstract RowCount : int
+
+/// A arbitrary matrix with user defined column and row count.
+[<Struct>]
+type Matrix<'a>(arr : 'a array, rowCount : int, columnCount : int) =
+    member this.Data = arr
+    member this.RowCount = rowCount
+    member this.ColumnCount = columnCount
+    override this.ToString() =
+        let colCount = this.ColumnCount 
+        let inline toString i v = v.ToString() + (if ((i + 1) % colCount) = 0 then "\n" else " ")
+        arr
+        |> Array.mapi toString
+        |> String.concat ""
+        |> (+) "\n"
+    interface IMatrix<'a> with
+        member this.Data = arr
+        member this.ColumnCount = columnCount
+        member this.RowCount = rowCount
+    /// Multiplies two matrices naively.
+    static member inline (.*) (m1:Matrix<_>, m2:Matrix<_>) = 
+        if m1.ColumnCount = m2.RowCount then
+            let inline index row col colCount = row * colCount + col
+            let inline mult row col k = m1.Data.[index row k m1.ColumnCount] * m2.Data.[index k col m2.ColumnCount]
+            let data = [|for row = 0 to (m1.RowCount - 1) do for col = 0 to (m2.ColumnCount - 1) do yield (seq {0..(m1.ColumnCount - 1)} |> Seq.map (mult row col) |> Seq.sum)|]
+            Just (Matrix(data, m1.RowCount, m2.ColumnCount))
+        else Nothing
+    /// Multiplies a matrix by a scalar value
+    static member inline (*) (m:Matrix<_>, a) = let inline map x = x * a in Matrix<_>(Array.map map m.Data, m.RowCount, m.ColumnCount)
+    /// Multiplies a matrix by a scalar value
+    static member inline (*) (a, m:Matrix<_>) = let inline map x = x * a in Matrix<_>(Array.map map m.Data, m.RowCount, m.ColumnCount)
+
+/// A 4x4 matrix used for all necessary transformations in the graphics pipeline.
+[<Struct>]
+type Matrix4<'a>(arr : 'a array) =
+    member this.Data = arr
+    override this.ToString() = 
+        let inline toString i v = v.ToString() + (if ((i + 1) % 4) = 0 then "\n" else " ")
+        arr
+        |> Array.mapi toString
+        |> String.concat ""
+        |> (+) "\n"
+    interface IMatrix<'a> with
+        member this.Data = arr
+        member this.ColumnCount = 4
+        member this.RowCount = 4
+    /// Adds two matrices component wise
+    static member inline (+) (m1:Matrix4<_>, m2:Matrix4<_>) = let inline map x y = x + y in Matrix4<_>(Array.map2 map m1.Data m2.Data)
+    /// Multiplies two matrices brute force.
+    static member inline (.*) (m1:Matrix4<_>, m2:Matrix4<_>) = 
+        let inline index row col colCount = row * colCount + col
+        let inline mult row col k= m1.Data.[index row k 4] * m2.Data.[index k col 4]
+        let data = [|for row = 0 to 3 do for col = 0 to 3 do yield (seq {0..3} |> Seq.map (mult row col) |> Seq.sum)|]
+        Matrix4(data)
+    /// Multiplies a matrix by a scalar value
+    static member inline (*) (m:Matrix4<_>, a) = let inline map x = x * a in Matrix4<_>(Array.map map m.Data)
+    /// Multiplies a matrix by a scalar value
+    static member inline (*) (a, m:Matrix4<_>) = let inline map x = x * a in Matrix4<_>(Array.map map m.Data)
+
+
 type Size<'a> =
     {
         Width : 'a
@@ -69,7 +133,7 @@ type DataType =
 [<AutoOpen>]
 module TypeOperations =
     /// Returns the data type for a generic type. This function works only on primitive types like int short etc.
-    let dataType<'a> =
+    let inline dataType<'a> =
         match typeof<'a> with
         | x when x = typeof<int> -> Just DataType.Int
         | x when x = typeof<int16> -> Just DataType.Short
@@ -78,4 +142,4 @@ module TypeOperations =
         | x when x = typeof<single> -> Just DataType.Single
         | _ -> Nothing
     /// Returns a color struct as array
-    let toColorArray (c:Color<'a>) = [|c.R; c.G; c.B; c.A|]
+    let inline toColorArray (c:Color<'a>) = [|c.R; c.G; c.B; c.A|]
