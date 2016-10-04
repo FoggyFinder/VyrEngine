@@ -98,6 +98,10 @@ module Matrix4 =
     let inline init f = Matrix.initData 4 4 f |> create 
     /// Creates a 4x4 matrix and initializes it by using a function taking the indices of the diagonal
     let inline initDiagonal f = Matrix.initDiagonalData 4 4 f |> create
+    /// Creates a 4x4 matrix and initializes the diagonals by the components of a vec3. 
+    let inline initDiagonalVector (v:Vec3<_>) = 
+        let inline initFunc i = match i with 0 -> v.X | 1 -> v.Y | 2 -> v.Z | _ -> LanguagePrimitives.GenericOne
+        Matrix.initDiagonalData 4 4 initFunc |> create 
     /// Returns the 4x4 identity
     let inline identity() = let m = Matrix.identity 4 in create m.Data
     /// Multiplies 2 Matrix4 types

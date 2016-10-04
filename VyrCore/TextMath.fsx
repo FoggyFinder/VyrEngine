@@ -26,22 +26,22 @@ let checkEquality = dot3 = dot4
 
 // Test Matrix<_> calculations
 let mIdentity : Matrix<float32> = Matrix.identity(3)
-let m31 = mIdentity * 2.0f
+let m31 = mIdentity .* 2.0f
 let m32 = Matrix.init 4 3 (fun row col -> float32 (row + col))
 let m33 = Matrix.init 3 5 (fun row col -> float32 (row + col))
-let m34 = m32 .* m33
+let m34 = m32 * m33
 printfn "%A" (Matrix.initDiagonal 4 3 (fun i -> float32 i))
 
 // Test Matrix4<_> calculations
 let matIdentity = Matrix4.identity()
-let mi1 = matIdentity * 3.0f
-let mi2 = 2.0f * matIdentity
+let mi1 = matIdentity .* 3.0f
+let mi2 = 2.0f .* matIdentity
 let mi3 = mi1 + mi2
 printfn "%A" (Matrix4.initDiagonal (fun i -> float32 i))
 
 let matFull = Matrix4.init (fun row col -> float (row + col))
-let mf1 = matFull * 2.0
-let mf2 = matFull * 1.5
+let mf1 = matFull .* 2.0
+let mf2 = matFull .* 1.5
 let mf3 = mf1 + mf2
-let mf4 : Matrix4<float> = mf1 .* mf2
+let mf4 : Matrix4<float> = mf1 * mf2
  

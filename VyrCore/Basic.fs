@@ -77,7 +77,7 @@ type Matrix<'a>(arr : 'a array, rowCount : int, columnCount : int) =
         member this.ColumnCount = columnCount
         member this.RowCount = rowCount
     /// Multiplies two matrices naively.
-    static member inline (.*) (m1:Matrix<_>, m2:Matrix<_>) = 
+    static member inline (*) (m1:Matrix<_>, m2:Matrix<_>) = 
         if m1.ColumnCount = m2.RowCount then
             let inline index row col colCount = row * colCount + col
             let inline mult row col k = m1.Data.[index row k m1.ColumnCount] * m2.Data.[index k col m2.ColumnCount]
@@ -85,9 +85,9 @@ type Matrix<'a>(arr : 'a array, rowCount : int, columnCount : int) =
             Just (Matrix(data, m1.RowCount, m2.ColumnCount))
         else Nothing
     /// Multiplies a matrix by a scalar value
-    static member inline (*) (m:Matrix<_>, a) = let inline map x = x * a in Matrix<_>(Array.map map m.Data, m.RowCount, m.ColumnCount)
+    static member inline (.*) (m:Matrix<_>, a) = let inline map x = x * a in Matrix<_>(Array.map map m.Data, m.RowCount, m.ColumnCount)
     /// Multiplies a matrix by a scalar value
-    static member inline (*) (a, m:Matrix<_>) = let inline map x = x * a in Matrix<_>(Array.map map m.Data, m.RowCount, m.ColumnCount)
+    static member inline (.*) (a, m:Matrix<_>) = let inline map x = x * a in Matrix<_>(Array.map map m.Data, m.RowCount, m.ColumnCount)
 
 /// A 4x4 matrix used for all necessary transformations in the graphics pipeline.
 [<Struct>]
@@ -105,16 +105,18 @@ type Matrix4<'a>(arr : 'a array) =
         member this.RowCount = 4
     /// Adds two matrices component wise
     static member inline (+) (m1:Matrix4<_>, m2:Matrix4<_>) = let inline map x y = x + y in Matrix4<_>(Array.map2 map m1.Data m2.Data)
-    /// Multiplies two matrices brute force.
-    static member inline (.*) (m1:Matrix4<_>, m2:Matrix4<_>) = 
+    /// Multiplies two matrices by brute force.
+    static member inline (*) (m1:Matrix4<_>, m2:Matrix4<_>) = 
         let inline index row col colCount = row * colCount + col
         let inline mult row col k= m1.Data.[index row k 4] * m2.Data.[index k col 4]
         let data = [|for row = 0 to 3 do for col = 0 to 3 do yield (seq {0..3} |> Seq.map (mult row col) |> Seq.sum)|]
         Matrix4(data)
-    /// Multiplies a matrix by a scalar value
-    static member inline (*) (m:Matrix4<_>, a) = let inline map x = x * a in Matrix4<_>(Array.map map m.Data)
-    /// Multiplies a matrix by a scalar value
-    static member inline (*) (a, m:Matrix4<_>) = let inline map x = x * a in Matrix4<_>(Array.map map m.Data)
+    /// Multiplies a matrix by a vector, returning another vector.
+    static member inline (*) (m:Matrix4<_>, v:Vec4<_>) = ()
+    /// Multiplies matrix values by a generic value
+    static member inline (.*) (m:Matrix4<_>, a) = let inline map x = x * a in Matrix4<_>(Array.map map m.Data)
+    /// Multiplies matrix values by a generic value
+    static member inline (.*) (a, m:Matrix4<_>) = let inline map x = x * a in Matrix4<_>(Array.map map m.Data)
 
 
 type Size<'a> =
