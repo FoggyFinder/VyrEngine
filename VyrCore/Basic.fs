@@ -24,8 +24,8 @@ type Vec2<'a>(x:'a, y:'a) =
     member this.X = x
     member this.Y = y
     override this.ToString() = this.X.ToString() + " | " + this.Y.ToString()
-    static member inline (*) (a, v:Vec2<_>) = Vec2<_>(a * v.X, a * v.Y)
-    static member inline (*) (v:Vec2<_>, a) = Vec2<_>(a * v.X, a * v.Y)
+    static member inline (.*) (a, v:Vec2<_>) = Vec2<_>(a * v.X, a * v.Y)
+    static member inline (.*) (v:Vec2<_>, a) = Vec2<_>(a * v.X, a * v.Y)
     static member inline (/) (v:Vec2<'T>, a:'T) : Vec2<'T> = Vec2<_>(v.X / a, v.Y / a)
     static member inline (+) (v1:Vec2<_>, v2:Vec2<_>) = Vec2<_>(v1.X + v2.X, v1.Y + v2.Y)
     static member inline (-) (v1:Vec2<_>, v2:Vec2<_>) = Vec2<_>(v1.X - v2.X, v1.Y - v2.Y)
@@ -38,8 +38,8 @@ type Vec3<'a>(x:'a, y:'a, z:'a) =
     member this.Y = y
     member this.Z = z
     override this.ToString() = this.X.ToString() + " | " + this.Y.ToString() + " | " + this.Z.ToString()
-    static member inline (*) (a, v:Vec3<_>) = Vec3<_>(a * v.X, a * v.Y, a * v.Z)
-    static member inline (*) (v:Vec3<_>, a) = Vec3<_>(a * v.X, a * v.Y, a * v.Z)
+    static member inline (.*) (a, v:Vec3<_>) = Vec3<_>(a * v.X, a * v.Y, a * v.Z)
+    static member inline (.*) (v:Vec3<_>, a) = Vec3<_>(a * v.X, a * v.Y, a * v.Z)
     static member inline (+) (v1:Vec3<_>, v2:Vec3<_>) = Vec3<_>(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z)
 
 /// Basic vector 4 type with typical operators.
@@ -49,8 +49,9 @@ type Vec4<'a>(x:'a,y:'a,z:'a,w:'a) =
     member this.Y = y
     member this.Z = z
     member this.W = w
-    static member inline (*) (a, v:Vec4<_>) = Vec4<_>(a * v.X, a * v.Y, a * v.Z, a * v.W)
-    static member inline (*) (v:Vec4<_>, a) = Vec4<_>(a * v.X, a * v.Y, a * v.Z, a * v.W)
+    override this.ToString() = this.X.ToString() + " | " + this.Y.ToString() + " | " + this.Z.ToString() + " | " + this.W.ToString()
+    static member inline (.*) (a, v:Vec4<_>) = Vec4<_>(a * v.X, a * v.Y, a * v.Z, a * v.W)
+    static member inline (.*) (v:Vec4<_>, a) = Vec4<_>(a * v.X, a * v.Y, a * v.Z, a * v.W)
     static member inline (+) (v1:Vec4<_>, v2:Vec4<_>) = Vec4<_>(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z, v1.W + v2.W)
 
 /// Interface for each matrix using the matrix math module.
@@ -112,7 +113,22 @@ type Matrix4<'a>(arr : 'a array) =
         let data = [|for row = 0 to 3 do for col = 0 to 3 do yield (seq {0..3} |> Seq.map (mult row col) |> Seq.sum)|]
         Matrix4(data)
     /// Multiplies a matrix by a vector, returning another vector.
-    static member inline (*) (m:Matrix4<_>, v:Vec4<_>) = ()
+    static member inline (*) (m:Matrix4<_>, v:Vec4<_>) = 
+        /// This function recursively multiplies the components of the vector by the matrix data. The result is given when index >= Matrix Data length
+        let rec recMult index acc result vArr mArr =
+            let modulo = index % 4
+            let v() = (Array.item index mArr) * (Array.item modulo vArr) // calculate the new value
+            match modulo with
+            | 0 -> 
+                match index with
+                | x when x >= (Array.length mArr) -> acc::result // end of rec is reached, return
+                | 0 -> recMult (index + 1) (v()) result vArr mArr // first entry doesnt need a concat
+                | _ -> recMult (index + 1) (v()) (acc::result) vArr mArr // all other entries need a concat (acc::result)
+            | _ -> recMult (index + 1) (acc+v()) result vArr mArr // for all indices other the starting ones (x-component), accumulate acc
+        m.Data
+        |> recMult 0 LanguagePrimitives.GenericZero [] [| v.X; v.Y; v.Z; v.W |]
+        |> Array.ofList
+        |> (fun arr -> Vec4(arr.[3], arr.[2], arr.[1], arr.[0]))
     /// Multiplies matrix values by a generic value
     static member inline (.*) (m:Matrix4<_>, a) = let inline map x = x * a in Matrix4<_>(Array.map map m.Data)
     /// Multiplies matrix values by a generic value

@@ -45,3 +45,6 @@ let mf2 = matFull .* 1.5
 let mf3 = mf1 + mf2
 let mf4 : Matrix4<float> = mf1 * mf2
  
+let md1 = Matrix4.initDiagonalVector (Vec3(1.0, 2.0, 3.0))
+let mm1 = md1 * Vec4(1.0, 2.0, 3.0, 1.0) // Result (1, 4, 9, 1)
+let mm2 = mf4 * Vec4(2.0, 4.0, 5.0, -6.0) // Result (138, 180, 222, 264)
